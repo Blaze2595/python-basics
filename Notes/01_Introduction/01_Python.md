@@ -152,10 +152,11 @@ forever and it seems that this one has now ridden off into the sunset. --Dave
 
 Update: GitHub user @asett has suggested the following modified code might work,
 but you'll have to provide your own API key (available [here](https://www.transitchicago.com/developers/bustracker/)).
+api_key = H8Krn29EawMq23XW4vkJhFSGR 
 
 ```python
 import urllib.request
-u = urllib.request.urlopen('http://www.ctabustracker.com/bustime/api/v2/getpredictions?key=ADD_YOUR_API_KEY_HERE&rt=22&stpid=14791')
+u = urllib.request.urlopen('http://www.ctabustracker.com/bustime/api/v2/getpredictions?key=H8Krn29EawMq23XW4vkJhFSGR&rt=22&stpid=14791')
 from xml.etree.ElementTree import parse
 doc = parse(u)
 print("Arrival time in minutes:")
@@ -171,7 +172,7 @@ Chicago will have to wait for the next northbound CTA \#22 bus:
 
 ```python
 >>> import urllib.request
->>> u = urllib.request.urlopen('http://ctabustracker.com/bustime/map/getStopPredictions.jsp?stop=14791&route=22')
+>>> u = urllib.request.urlopen('http://ctabustracker.com/bustime/map/getStopPredictions.jsp?key=H8Krn29EawMq23XW4vkJhFSGR&stop=14791&route=22')
 >>> from xml.etree.ElementTree import parse
 >>> doc = parse(u)
 >>> for pt in doc.findall('.//pt'):

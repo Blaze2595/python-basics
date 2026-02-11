@@ -4,19 +4,20 @@
 import csv
 
 def read_portfolio(filename):
-    total_cost = []
+    values = []
 
     with open(filename,'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for line in rows:
+        for i,line in enumerate(rows):
+            record = dict(zip(headers,line))
             d = {}
-            d['name'] = line[0]
-            d['shares'] = int(line[1])
-            d['cost'] = float(line[2])
-            total_cost.append(d)
+            d['name'] = record['name']
+            d['shares'] = int(record['shares'])
+            d['cost'] = float(record['price'])
+            values.append(d)
     
-    return total_cost
+    return values
 
 def read_prices(filename):
     values = {}
@@ -28,3 +29,27 @@ def read_prices(filename):
                 values[str(line[0])] = float(line[1])
 
     return values
+
+def make_report(portfolio, prices):
+    result = []
+    headers = ('Names','Share','Price','Cost')
+    line = ('__________','__________','__________','__________')
+
+    for item in portfolio:
+        if(item['name'] in prices):
+            name = item['name']
+            shares = item['shares']
+            price = float(prices[item['name']])
+            change = price - float(item['cost'])
+            t = (name,shares,price,change)
+
+            result.append(t)
+    
+    
+    print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s} {headers[3]:>10s}')
+    print(f'{line[0]:>10s} {line[1]:>10s} {line[2]:>10s} {line[3]:>10s}')
+    
+    for _name,_share,_price,_change in result:
+        print(f'{_name:>10s} {_share:>10d} {f"${_price:.2f}":>10} {_change:>10.2f}')
+
+    return True

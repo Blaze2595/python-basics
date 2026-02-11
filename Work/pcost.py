@@ -16,11 +16,12 @@ def portfolio_cost(filename):
 
 
     try:
-        for s in rows:
-            share = int(s[1])
-            cost = float(s[2])
-            total_cost = total_cost + (share * cost)
+        for i,s in enumerate(rows):
+            record = dict(zip(header,s))
+            share = int(record['shares'])
+            cost = float(record['price'])
+            total_cost += (share * cost)
     except ValueError:
-        print('Invalid Operation : ',s)
+        print(f'Row No : {i} Invalid Operation : ',s)
     
     return total_cost

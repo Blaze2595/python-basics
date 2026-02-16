@@ -25,15 +25,7 @@ def parse_csv(filename, select = [],types = [],has_headers = True,delimiter = ',
             index = [x for x in range(len(headers))]
         
         # If types not specified, all the column values are converted to string
-        if not types:
-            # The following code is made to handle type conversion if has_headers is false
-            pos = f.tell()
-            row = next(rows)
-            types = [str]
-
-            types = types * len(row)
-            f.seek(pos)
-            rows = csv.reader(f)
+        types = form_types_object(headers) if not types and has_headers else types
         
         
         for i,line in enumerate(rows):
@@ -50,6 +42,7 @@ def parse_csv(filename, select = [],types = [],has_headers = True,delimiter = ',
                 else:
                     record = []
                     for x,item in enumerate(line):
+                        types = form_types_object(line) if not types else types
                         record.append(types[x](item))
                     
                     records.append(tuple(record))
@@ -60,3 +53,8 @@ def parse_csv(filename, select = [],types = [],has_headers = True,delimiter = ',
                     print(f'Reason : {ex}')
     
     return records
+
+def form_types_object(item):
+    types = [str]
+    types = types * len(item)
+    return types

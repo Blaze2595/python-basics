@@ -1,34 +1,15 @@
 # report.py
 #
 # Exercise 2.4
-import csv
+from fileparse import parse_csv
 
 def read_portfolio(filename):
-    values = []
+    return parse_csv(filename=filename,has_headers=True)
 
-    with open(filename,'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for i,line in enumerate(rows):
-            record = dict(zip(headers,line))
-            d = {}
-            d['name'] = record['name']
-            d['shares'] = int(record['shares'])
-            d['cost'] = float(record['price'])
-            values.append(d)
-    
-    return values
 
 def read_prices(filename):
-    values = {}
+    return parse_csv(filename=filename,has_headers=False)
 
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        for line in rows:
-            if(len(line) > 0):
-                values[str(line[0])] = float(line[1])
-
-    return values
 
 def portfolio_report(portfoliofile, pricesfile):
     result = []
@@ -37,22 +18,24 @@ def portfolio_report(portfoliofile, pricesfile):
     prices = read_prices(pricesfile)
     result = get_profit_margin(portfolio,prices)
     print_report(result)
-    return True
+
 
 def get_profit_margin(portfolio,prices):
     result = []
+    prices = dict(prices)
 
     for item in portfolio:
         if(item['name'] in prices):
             name = item['name']
-            shares = item['shares']
+            shares = int(item['shares'])
             price = float(prices[item['name']])
-            change = price - float(item['cost'])
+            change = price - float(item['price'])
             t = (name,shares,price,change)
 
             result.append(t)
     
     return result
+
 
 def print_report(report):
     headers = ('Names','Share','Price','Cost')
@@ -63,3 +46,13 @@ def print_report(report):
     
     for _name,_share,_price,_change in report:
         print(f'{_name:>10s} {_share:>10d} {f"${_price:.2f}":>10} {_change:>10.2f}')
+
+
+def main(argv):
+    portfolio_report(argv[1],argv[2])
+
+
+if __name__ == '__main__':
+    import sys
+
+    main(sys.argv)

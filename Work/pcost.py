@@ -1,27 +1,28 @@
 # pcost.py
 #
 # Exercise 1.27
-import csv
+import report
 
 def portfolio_cost(filename):
-    content = []
     total_cost = 0
 
-    try:
-        f = open(filename)
-        rows = csv.reader(f)
-        header = next(rows)
-    except FileNotFoundError:
-        print('File not found. Try again')
-
+    portfolio = report.read_portfolio(filename)
 
     try:
-        for i,s in enumerate(rows):
-            record = dict(zip(header,s))
-            share = int(record['shares'])
-            cost = float(record['price'])
+        for i,items in enumerate(portfolio):
+            share = int(items['shares'])
+            cost = float(items['price'])
             total_cost += (share * cost)
     except ValueError:
-        print(f'Row No : {i} Invalid Operation : ',s)
+        print(f'Row No : {i} Invalid Operation : ',items)
     
     return total_cost
+
+def main(argv):
+    print(f'The Total Cost is : {portfolio_cost(argv[1])}')
+
+
+if __name__ == '__main__':
+    import sys
+
+    main(sys.argv)

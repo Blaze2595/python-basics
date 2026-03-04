@@ -55,6 +55,8 @@ class HTMLTableFormatter:
         r = r + i + '</tr>'
         print(r)
 
+class FormatException(Exception):
+    pass
 
 def create_formatter(format):
     # Selecting the output format
@@ -65,4 +67,13 @@ def create_formatter(format):
     elif(format == 'html'):
         return HTMLTableFormatter()
     else:
-        raise RuntimeError(f'Invalid Format')
+        raise FormatException(f'Unknown Table Format')
+    
+
+def print_table(tabledata, columns, formatter):
+    formatter.headings(columns)
+
+    for item in tabledata:
+        for clm in columns:
+            print(f'{str(getattr(item,clm)):>10s}',end=' ')
+        print()

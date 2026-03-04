@@ -4,11 +4,14 @@
 from fileparse import parse_csv
 import stock
 import tableformat
+from portfolio import Portfolio
 
 def read_portfolio(filename):
     with open(filename) as lines:
         portfile = parse_csv(lines=lines,select=['name','shares','price'],types=[str,int,float],has_headers=True)
-        return [stock.Stock(d['name'],d['shares'],d['price']) for d in portfile]
+    
+    portfolio =  [stock.Stock(d['name'],d['shares'],d['price']) for d in portfile]
+    return Portfolio(portfolio)
 
 
 def read_prices(filename):
@@ -32,11 +35,11 @@ def get_profit_margin(portfolio,prices):
     prices = dict(prices)
 
     for item in portfolio:
-        if(item.Name in prices):
-            name = item.Name
-            shares = int(item.Shares)
-            price = float(prices[item.Name])
-            change = price - float(item.Price)
+        if(item.name in prices):
+            name = item.name
+            shares = int(item.shares)
+            price = float(prices[item.name])
+            change = price - float(item.price)
             t = (name,shares,price,change)
 
             result.append(t)
